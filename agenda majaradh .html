@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            margin: 20px;
+            border: #0056b3 1px solid;
+        }
+        #date-time {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .button-group {
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="date-time"></div>
+
+<div id="content">
+    <p id="para1">١- الصيانات - محمد الشهري  / صيانات محايل <br> رقم الهاتف: <br> +966 55 861 2512</p>
+    <div class="button-group">
+        <button onclick="copyText('para1')">نسخ النص</button>
+    </div>
+
+    <p id="para2">٢-علي الفاهمي - شرطة ثالوث المنظر - مطلوب ممثل عن شركة الراشد  سعودي الجنسية - للحضور يوم الخميس القادم ٢٢-٨-٢٠٢٤ الساعة ٩ صباحا<br> في قسم شرطة ثالوث المنظر. <br> للتواصل: ا علي الفاهمي<br> رقم الهاتف: 0112950945</p>
+    <div class="button-group">
+        <button onclick="copyText('para2')">نسخ النص</button>
+    </div>
+
+    <p id="para3">٣- عاقب زيارة غدا مع سمير</p>
+    <div class="button-group">
+        <button onclick="copyText('para3')">نسخ النص</button>
+    </div>
+
+    <p id="para4">٤- اعمال الكرمال - امين</p>
+    <div class="button-group">
+        <button onclick="copyText('para4')">نسخ النص</button>
+    </div>
+</div>
+
+<div class="button-group">
+    <button onclick="window.print()">طباعة الصفحة</button>
+</div>
+
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+            alert("تم نسخ النص بنجاح!");
+        }, function() {
+            alert("حدث خطأ أثناء النسخ.");
+        });
+    }
+
+    function updateDateTime() {
+        var now = new Date();
+        var dateTimeString = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
+        document.getElementById('date-time').innerText = dateTimeString;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+
+</body>
+</html>
