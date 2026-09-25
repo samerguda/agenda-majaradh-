@@ -1,88 +1,493 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            margin: 20px;
-            border: #0056b3 1px solid;
-        }
-        #date-time {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .button-group {
-            margin-top: 10px;
-        }
-        button {
-            margin: 5px;
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدن بلجيكا الرسمية & الساعة المباشرة</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --accent: #00897b;
+      --accent-light: #e0f2f1;
+      --border-color: #e5e7eb;
+      --whatsapp-color: #25d366;
+      --whatsapp-bg: #e8f8ef;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* Live Clock Widget */
+    .clock-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.25rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .clock-time {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      direction: ltr;
+    }
+
+    .clock-date {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Main Container Card */
+    .details-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      border-bottom: 2px solid var(--accent-light);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    /* Region Accordions */
+    .region-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      background-color: var(--accent-light);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .province-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 1rem 0 0.5rem 0;
+      border-right: 4px solid var(--accent);
+      padding-right: 0.5rem;
+    }
+
+    /* Grid layout for buttons */
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Copy Button */
+    .btn-city {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      text-align: right;
+    }
+
+    .btn-city:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .btn-city span.copy-icon {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: #ffffff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-city:hover span.copy-icon {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Action Buttons Group */
+    .actions-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+    }
+
+    .btn-action {
+      border-radius: 12px;
+      padding: 0.85rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-whatsapp {
+      background-color: var(--whatsapp-bg);
+      color: #0f5132;
+      border: 1px solid var(--whatsapp-color);
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #d1e7dd;
+    }
+
+    .btn-copy-all {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-copy-all:hover {
+      background-color: #b2dfdb;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      background: #111827;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
-<div id="date-time"></div>
+  <!-- Real-Time Clock Widget -->
+  <div class="clock-container">
+    <div class="clock-time" id="time">00:00:00</div>
+    <div class="clock-date" id="date">--</div>
+  </div>
 
-<div id="content">
-    <p id="para1">١- الصيانات - محمد الشهري  / صيانات محايل <br> رقم الهاتف: <br> +966 55 861 2512</p>
-    <div class="button-group">
-        <button onclick="copyText('para1')">نسخ النص</button>
+  <!-- Details Card -->
+  <div class="details-card">
+    <div class="card-header">
+      <div class="card-title">🇧🇪 مدن بلجيكا الرسمية (133 مدينة)</div>
     </div>
 
-    <p id="para2">٢-علي الفاهمي - شرطة ثالوث المنظر - مطلوب ممثل عن شركة الراشد  سعودي الجنسية - للحضور يوم الخميس القادم ٢٢-٨-٢٠٢٤ الساعة ٩ صباحا<br> في قسم شرطة ثالوث المنظر. <br> للتواصل: ا علي الفاهمي<br> رقم الهاتف: 0112950945</p>
-    <div class="button-group">
-        <button onclick="copyText('para2')">نسخ النص</button>
+    <!-- 1. Flanders -->
+    <div class="region-title">1. الإقليم الفلمنكي (فاندلرز) - 66 مدينة</div>
+    
+    <div class="province-title">محافظة أنتويرب (Antwerpen) - 9 مدن</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('أنتويرب (Antwerpen)')">أنتويرب (Antwerpen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ميكلين (Mechelen)')">ميكلين (Mechelen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تورنهاوت (Turnhout)')">تورنهاوت (Turnhout) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لير (Lier)')">لير (Lier) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('خيراردسبرخن (Geel)')">خيراردسبرخن (Geel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هيرنتالس (Herentals)')">هيرنتالس (Herentals) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هوخستراتن (Hoogstraten)')">هوخستراتن (Hoogstraten) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('مورتسيل (Mortsel)')">مورتسيل (Mortsel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('شيرتن (Scherpenheuvel-Zichem)')">شيرتن (Scherpenheuvel-Zichem) <span class="copy-icon">نسخ</span></button>
     </div>
 
-    <p id="para3">٣- عاقب زيارة غدا مع سمير</p>
-    <div class="button-group">
-        <button onclick="copyText('para3')">نسخ النص</button>
+    <div class="province-title">محافظة شرق فلاندرز (Oost-Vlaanderen) - 13 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('خنت (Gent)')">خنت (Gent) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أست (Aalst)')">أست (Aalst) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سينت نيكلاس (Sint-Niklaas)')">سينت نيكلاس (Sint-Niklaas) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('دينديرموند (Dendermonde)')">دينديرموند (Dendermonde) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('اودينارد (Oudenaarde)')">اودينارد (Oudenaarde) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('خينك (Eeklo)')">خينك (Eeklo) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ديينزه (Deinze)')">ديينزه (Deinze) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('خيراردسبرغن (Geraardsbergen)')">خيراردسبرغن (Geraardsbergen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لوكيرين (Lokeren)')">لوكيرين (Lokeren) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('نينوف (Ninove)')">نينوف (Ninove) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('رونسه (Ronse)')">رونسه (Ronse) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('زوتيجيم (Zottegem)')">زوتيجيم (Zottegem) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('زيلت (Zele)')">زيلت (Zele) <span class="copy-icon">نسخ</span></button>
     </div>
 
-    <p id="para4">٤- اعمال الكرمال - امين</p>
-    <div class="button-group">
-        <button onclick="copyText('para4')">نسخ النص</button>
+    <div class="province-title">محافظة غرب فلاندرز (West-Vlaanderen) - 22 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('بروج (Brugge)')">بروج (Brugge) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('كورتريك (Kortrijk)')">كورتريك (Kortrijk) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أوستند (Oostende)')">أوستند (Oostende) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('روسيلاره (Roeselare)')">روسيلاره (Roeselare) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('إيبر (Ieper)')">إيبر (Ieper) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هاريلبيك (Harelbeke)')">هاريلبيك (Harelbeke) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('مينين (Menen)')">مينين (Menen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تيليت (Tielt)')">تيليت (Tielt) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تورهوت (Torhout)')">تورهوت (Torhout) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أكسيل (Izegem)')">أكسيل (Izegem) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بلانكنبرخ (Blankenberge)')">بلانكنبرخ (Blankenberge) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('دام (Damme)')">دام (Damme) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ديكسمويد (Diksmuide)')">ديكسمويد (Diksmuide) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('خستل (Gistel)')">خستل (Gistel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لوفينكيم (Lo-Reninge)')">لوفينكيم (Lo-Reninge) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('نيوپورت (Nieuwpoort)')">نيوپورت (Nieuwpoort) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بوبيرينج (Poperinge)')">بوبيرينج (Poperinge) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ستادن (Veurne)')">ستادن (Veurne) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فارينجيم (Waregem)')">فارينجيم (Waregem) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فيرفيك (Wervik)')">فيرفيك (Wervik) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أودينبورخ (Oudenburg)')">أودينبورخ (Oudenburg) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ميسين (Mesen)')">ميسين (Mesen) <span class="copy-icon">نسخ</span></button>
     </div>
-</div>
 
-<div class="button-group">
-    <button onclick="window.print()">طباعة الصفحة</button>
-</div>
+    <div class="province-title">محافظة فليميش برابانت (Vlaams-Brabant) - 10 مدن</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('لوفان (Leuven)')">لوفان (Leuven) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فيلفورد (Vilvoorde)')">فيلفورد (Vilvoorde) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هال (Halle)')">هال (Halle) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تينين (Tienen)')">تينين (Tienen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ديست (Diest)')">ديست (Diest) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('آرسكوت (Aarschot)')">آرسكوت (Aarschot) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لاندين (Landen)')">لاندين (Landen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('زوتليوف (Zoutleeuw)')">زوتليوف (Zoutleeuw) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('شيربينهوفل (Scherpenheuvel)')">شيربينهوفل (Scherpenheuvel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أفليجم (Affligem)')">أفليجم (Affligem) <span class="copy-icon">نسخ</span></button>
+    </div>
 
-<script>
-    function copyText(elementId) {
-        var text = document.getElementById(elementId).innerText;
-        navigator.clipboard.writeText(text).then(function() {
-            alert("تم نسخ النص بنجاح!");
-        }, function() {
-            alert("حدث خطأ أثناء النسخ.");
-        });
+    <div class="province-title">محافظة ليمبورغ (Limburg) - 12 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('هاسلت (Hasselt)')">هاسلت (Hasselt) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('خينك (Genk)')">خينك (Genk) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تونغيرين (Tongeren)')">تونغيرين (Tongeren) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سينت ترويدن (Sint-Truiden)')">سينت ترويدن (Sint-Truiden) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بيرينجيم (Beringen)')">بيرينجيم (Beringen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بيلزن (Bilzen)')">بيلزن (Bilzen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بري (Bree)')">بري (Bree) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هامونت-آشيل (Hamont-Achel)')">هامونت-آشيل (Hamont-Achel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هيلسين (Halen)')">هيلسين (Halen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هيرك-دي-ستاد (Herk-de-Stad)')">هيرك-دي-ستاد (Herk-de-Stad) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لووميل (Lommel)')">لووميل (Lommel) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ماسايك (Maaseik)')">ماسايك (Maaseik) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <!-- 2. Wallonia -->
+    <div class="region-title">2. إقليم والونيا - 66 مدينة</div>
+
+    <div class="province-title">محافظة أينو (Hainaut) - 23 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('شارلروا (Charleroi)')">شارلروا (Charleroi) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('مونس (Mons)')">مونس (Mons) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('تورناي (Tournai)')">تورناي (Tournai) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لا لوفيير (La Louvière)')">لا لوفيير (La Louvière) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('موسكرون (Mouscron)')">موسكرون (Mouscron) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أث (Ath)')">أث (Ath) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('شيمي (Chimay)')">شيمي (Chimay) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('شاتليه (Châtelet)')">شاتليه (Châtelet) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('كومين-فارنيتون (Comines-Warneton)')">كومين-فارنيتون <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أنتوين (Antoing)')">أنتوين (Antoing) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بومون (Beaumont)')">بومون (Beaumont) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بيلوي (Belœil)')">بيلوي (Belœil) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('برين-لو-كونت (Braine-le-Comte)')">برين-لو-كونت <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('إنجين (Enghien)')">إنجين (Enghien) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فلوروس (Fleurus)')">فلوروس (Fleurus) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فونتين-ليفيك (Fontaine-l\'Évêque)')">فونتين-ليفيك <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أيسش (Lessines)')">أيسش (Lessines) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لوفرال (Le Rœulx)')">لوفرال (Le Rœulx) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بيرول (Péruwelz)')">بيرول (Péruwelz) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سوزيني (Soignies)')">سوزيني (Soignies) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ثوين (Thuin)')">ثوين (Thuin) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سانت غيسلان (Saint-Ghislain)')">سانت غيسلان <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بينشي (Binche)')">بينشي (Binche) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <div class="province-title">محافظة لييج (Liège) - 15 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('لييج (Liège)')">لييج (Liège) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فيرفييه (Verviers)')">فيرفييه (Verviers) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هوي (Huy)')">هوي (Huy) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سراينج (Seraing)')">سراينج (Seraing) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سبا (Spa)')">سبا (Spa) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('إوپن (Eupen)')">إوپن (Eupen) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('مالميدي (Malmedy)')">مالميدي (Malmedy) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ستانيسلاس (Stavelot)')">ستانيسلاس (Stavelot) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سانت فيث (Sankt Vith)')">سانت فيث (Sankt Vith) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بوهان (Blegny)')">بوهان (Blegny) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هانيو (Hannut)')">هانيو (Hannut) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هيرستال (Herstal)')">هيرستال (Herstal) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('ليمبورغ (Limbourg)')">ليمبورغ (Limbourg) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فيزيه (Visé)')">فيزيه (Visé) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فاريزي (Waremme)')">فاريزي (Waremme) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <div class="province-title">محافظة لوكسمبورغ البلجيكية (Luxembourg) - 12 مدينة</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('آرلون (Arlon)')">آرلون (Arlon) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('باستون (Bastogne)')">باستون (Bastogne) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أوبانج (Aubange)')">أوبانج (Aubange) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بوليو (Bouillon)')">بوليو (Bouillon) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('شيني (Chiny)')">شيني (Chiny) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فلورانفيل (Florenville)')">فلورانفيل (Florenville) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('هوفاليز (Houffalize)')">هوفاليز (Houffalize) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('لا روش أون أردن (La Roche-en-Ardenne)')">لا روش أون أردن <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('مارش أون فامين (Marche-en-Famenne)')">مارش أون فامين <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('نويشاتو (Neufchâteau)')">نويشاتو (Neufchâteau) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سان هوبير (Saint-Hubert)')">سان هوبير <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('فيرتون (Virton)')">فيرتون (Virton) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <div class="province-title">محافظة نامور (Namur) - 10 مدن</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('نامور (Namur)')">نامور (Namur) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('دينانت (Dinant)')">دينانت (Dinant) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أندين (Andenne)')">أندين (Andenne) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('بياوراين (Beauraing)')">بياوراين (Beauraing) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سيني (Ciney)')">سيني (Ciney) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('كوفان (Couvin)')">كوفان (Couvin) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('جيمبلوكس (Gembloux)')">جيمبلوكس (Gembloux) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('روشفور (Rochefort)')">روشفور (Rochefort) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('سامبرفيل (Sambreville)')">سامبرفيل (Sambreville) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('والكور (Walcourt)')">والكور (Walcourt) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <div class="province-title">محافظة برابانت والون (Brabant wallon) - 6 مدن</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('وافر (Wavre)')">وافر (Wavre) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('نيفيل (Nivelles)')">نيفيل (Nivelles) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('أوتينيس-لوفان-لا-نوف (Ottignies-Louvain-la-Neuve)')">أوتينيس-لوفان-لا-نوف <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('جوبروش (Jodoigne)')">جوبروش (Jodoigne) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('جومبلو (Hannut)')">جومبلو (Hannut) <span class="copy-icon">نسخ</span></button>
+      <button class="btn-city" onclick="copyCity('توبيز (Tubize)')">توبيز (Tubize) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <!-- 3. Brussels -->
+    <div class="region-title">3. إقليم بروكسل العاصمة - مدينة واحدة رسمياً</div>
+    <div class="cities-grid">
+      <button class="btn-city" onclick="copyCity('مدينة بروكسل (Ville de Bruxelles / Stad Brussel)')">مدينة بروكسل (Stad Brussel) <span class="copy-icon">نسخ</span></button>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-group">
+      <a href="#" class="btn-action btn-whatsapp" onclick="sendWhatsApp(event)">
+        💬 إرسال القائمة كاملة عبر WhatsApp
+      </a>
+      <div class="btn-action btn-copy-all" onclick="copyAllDetails()">
+        📋 نسخ جميع المدن والقوائم
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">تم النسخ بنجاح!</div>
+
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+      document.getElementById('time').textContent = now.toLocaleTimeString('en-US', timeOptions);
+
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString('ar-EG', dateOptions);
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Toast Notice
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    function updateDateTime() {
-        var now = new Date();
-        var dateTimeString = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
-        document.getElementById('date-time').innerText = dateTimeString;
+    // Copy Individual City
+    function copyCity(cityName) {
+      navigator.clipboard.writeText(cityName).then(() => {
+        showToast(`تم نسخ: ${cityName}`);
+      });
     }
 
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-</script>
+    // Get Text Version
+    function getFullListText() {
+      return `🇧🇪 *تضم بلجيكا 133 مدينة رسمية موزعة حسب الأقاليم كالتالي:*\n\n` +
+             `*1. الإقليم الفلمنكي (فاندلرز) - 66 مدينة*\n` +
+             `• أنتويرب: أنتويرب، ميكلين، تورنهاوت، لير، خيراردسبرخن، هيرنتالس، هوخستراتن، مورتسيل، شيرتن.\n` +
+             `• شرق فلاندرز: خنت، أست، سينت نيكلاس، دينديرموند، اودينارد، خينك، ديينزه، خيراردسبرغن، لوكيرين، نينوف، رونسه، زوتيجيم، زيلت.\n` +
+             `• غرب فلاندرز: بروج، كورتريك، أوستند، روسيلاره، إيبر، هاريلبيك، مينين، تيليت، تورهوت، أكسيل، بلانكنبرخ، دام، ديكسمويد، خستل، لوفينكيم، نيوپورت، بوبيرينج، ستادن، فارينجيم، فيرفيك، أودينبورخ، ميسين.\n` +
+             `• فليميش برابانت: لوفان، فيلفورد، هال، تينين، ديست، آرسكوت، لاندين، زوتليوف، شيربينهوفل، أفليجم.\n` +
+             `• ليمبورغ: هاسلت، خينك، تونغيرين، سينت ترويدن، بيرينجيم، بيلزن، بري، هامونت-آشيل، هيلسين، هيرك-دي-ستاد، لووميل، ماسايك.\n\n` +
+             `*2. إقليم والونيا - 66 مدينة*\n` +
+             `• أينو: شارلروا، مونس، تورناي، لا لوفيير، موسكرون، أث، شيمي، شاتليه، كومين-فارنيتون، أنتوين، بومون، بيلوي، برين-لو-كونت، إنجين، فلوروس، فونتين-ليفيك، أيسش، لوفرال، بيرول، سوزيني، ثوين، سانت غيسلان، بينشي.\n` +
+             `• لييج: لييج، فيرفييه، هوي، سراينج، سبا، إوپن، مالميدي، ستانيسلاس، سانت فيث، بوهان، هانيو، هيرستال، ليمبورغ، فيزيه، فاريزي.\n` +
+             `• لوكسمبورغ: آرلون، باستون، أوبانج، بوليو، شيني، فلورانفيل، هوفاليز، لا روش أون أردن، مارش أون فامين، نويشاتو، سان هوبير، فيرتون.\n` +
+             `• نامور: نامور، دينانت، أندين، بياوراين، سيني، كوفان، جيمبلوكس، روشفور، سامبرفيل، والكور.\n` +
+             `• برابانت والون: وافر، نيفيل، أوتينيس-لوفان-لا-نوف، جوبروش، جومبلو، توبيز.\n\n` +
+             `*3. إقليم بروكسل العاصمة - مدينة واحدة*\n` +
+             `• مدينة بروكسل (Ville de Bruxelles / Stad Brussel)`;
+    }
 
+    // Copy All
+    function copyAllDetails() {
+      navigator.clipboard.writeText(getFullListText()).then(() => {
+        showToast('تم نسخ القائمة كاملة!');
+      });
+    }
+
+    // WhatsApp Send
+    function sendWhatsApp(event) {
+      event.preventDefault();
+      const text = encodeURIComponent(getFullListText());
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+  </script>
 </body>
 </html>
